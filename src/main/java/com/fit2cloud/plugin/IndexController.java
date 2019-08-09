@@ -1,11 +1,14 @@
 package com.fit2cloud.plugin;
 
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 /**
  * @author yankaijun
@@ -16,9 +19,12 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index() throws IOException {
-        Resource resource = new ClassPathResource("plugin/version");
-        BufferedReader reader = new BufferedReader(new FileReader(resource.getFile()));
-        String s = reader.readLine();
+        ClassPathResource resource = new ClassPathResource("plugin/version");
+        InputStream inputStream = resource.getInputStream();
+
+        String s = new BufferedReader(new InputStreamReader(inputStream))
+                .lines().collect(Collectors.joining("\n"));
+
         return "<h1> hello world， your deploy version " + s + "</h1>";
     }
 }
